@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Section - Hostel Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-building"></i>
+                <span>HMS</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="rooms.html" class="nav-link">Rooms</a></li>
+                <li class="nav-item"><a href="booking.html" class="nav-link">Booking</a></li>
+                <li class="nav-item"><a href="complaints.html" class="nav-link">Complaints</a></li>
+                <li class="nav-item"><a href="payment.html" class="nav-link active">Payment</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link">Profile</a></li>
+                <li class="nav-item"><a href="admin.html" class="nav-link">Admin</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Payment Section</h1>
+            <p class="page-subtitle">Manage your hostel payments and billing</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+                <!-- Payment Form -->
+                <div class="table-container">
+                    <h3><i class="fas fa-credit-card"></i> Make Payment</h3>
+                    <form id="paymentForm">
+                        <div class="form-group">
+                            <label for="studentId">Student ID</label>
+                            <input type="text" id="studentId" name="studentId" required placeholder="Enter your student ID">
+                        </div>
+                        <div class="form-group">
+                            <label for="studentName">Student Name</label>
+                            <input type="text" id="studentName" name="studentName" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="roomNumber">Room Number</label>
+                            <input type="text" id="roomNumber" name="roomNumber" required placeholder="Enter your room number">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentType">Payment Type</label>
+                            <select id="paymentType" name="paymentType" required onchange="updatePaymentAmount()">
+                                <option value="">Select Payment Type</option>
+                                <option value="Monthly Rent" data-amount="5000">Monthly Rent</option>
+                                <option value="Security Deposit" data-amount="10000">Security Deposit</option>
+                                <option value="Maintenance Fee" data-amount="1000">Maintenance Fee</option>
+                                <option value="Electricity Bill" data-amount="800">Electricity Bill</option>
+                                <option value="Water Bill" data-amount="500">Water Bill</option>
+                                <option value="Other" data-amount="0">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <input type="number" id="amount" name="amount" required min="1" placeholder="Enter amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select id="paymentMethod" name="paymentMethod" required>
+                                <option value="">Select Payment Method</option>
+                                <option value="UPI">UPI (Google Pay, PhonePe, etc.)</option>
+                                <option value="Net Banking">Net Banking</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Cash">Cash</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description (Optional)</label>
+                            <textarea id="description" name="description" rows="3" placeholder="Additional payment details"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-lock"></i> Proceed to Payment
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Payment Info -->
+                <div class="table-container">
+                    <h3><i class="fas fa-info-circle"></i> Payment Information</h3>
+                    <div style="line-height: 1.6;">
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">Payment Schedule:</h4>
+                        <ul style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                            <li><strong>Monthly Rent:</strong> Due on 1st of every month</li>
+                            <li><strong>Electricity Bill:</strong> Due on 15th of every month</li>
+                            <li><strong>Water Bill:</strong> Due on 20th of every month</li>
+                            <li><strong>Late Fee:</strong> ₹100 per day after due date</li>
+                        </ul>
+
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">Accepted Payment Methods:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1.5rem;">
+                            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 4px; text-align: center;">
+                                <i class="fab fa-google-pay" style="color: #4285f4;"></i> UPI
+                            </div>
+                            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 4px; text-align: center;">
+                                <i class="fas fa-university" style="color: #1976d2;"></i> Net Banking
+                            </div>
+                            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 4px; text-align: center;">
+                                <i class="fas fa-credit-card" style="color: #ff9800;"></i> Credit Card
+                            </div>
+                            <div style="background: #f0f8ff; padding: 0.5rem; border-radius: 4px; text-align: center;">
+                                <i class="fas fa-money-bill" style="color: #4caf50;"></i> Cash
+                            </div>
+                        </div>
+
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">Contact for Payment Issues:</h4>
+                        <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px;">
+                            <p style="margin-bottom: 0.5rem;"><i class="fas fa-phone"></i> <strong>Accounts:</strong> +1 234 567 8901</p>
+                            <p style="margin-bottom: 0.5rem;"><i class="fas fa-envelope"></i> <strong>Email:</strong> accounts@premierhostel.com</p>
+                            <p style="margin-bottom: 0;"><i class="fas fa-clock"></i> <strong>Office Hours:</strong> 9 AM - 6 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment History -->
+            <div class="table-container">
+                <h3><i class="fas fa-history"></i> Payment History</h3>
+                <table id="paymentsTable">
+                    <thead>
+                        <tr>
+                            <th>Payment ID</th>
+                            <th>Student ID</th>
+                            <th>Room Number</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentsTableBody">
+                        <!-- Payments will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Receipt Modal -->
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="receiptContent">
+                <!-- Receipt content will be populated -->
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="downloadReceipt()" class="btn btn-secondary" style="margin-right: 1rem;">
+                    <i class="fas fa-download"></i> Download PDF
+                </button>
+                <button onclick="hideModal('receiptModal')" class="btn btn-primary">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-building"></i>
+                        <span>Premier Hostel</span>
+                    </div>
+                    <p>Providing comfortable and affordable accommodation for students and professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                    <p><i class="fas fa-envelope"></i> info@premierhostel.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 University Ave, City</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Premier Hostel Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Side Navigation Arrows -->
+    <div class="side-nav">
+        <a href="complaints.html" class="side-nav-btn" title="Complaints">
+            <i class="fas fa-exclamation-triangle"></i>
+        </a>
+        <a href="profile.html" class="side-nav-btn" title="Profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="admin.html" class="side-nav-btn" title="Admin">
+            <i class="fas fa-user-shield"></i>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="payment.js"></script>
+</body>
+</html>

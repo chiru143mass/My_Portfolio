@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Hostel Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-building"></i>
+                <span>HMS</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="rooms.html" class="nav-link">Rooms</a></li>
+                <li class="nav-item"><a href="booking.html" class="nav-link">Booking</a></li>
+                <li class="nav-item"><a href="complaints.html" class="nav-link">Complaints</a></li>
+                <li class="nav-item"><a href="payment.html" class="nav-link">Payment</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link">Profile</a></li>
+                <li class="nav-item"><a href="admin.html" class="nav-link">Admin</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link active">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="page-subtitle">Get in touch with our team for assistance and inquiries</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <!-- Contact Information Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; text-align: center;">
+                    <i class="fas fa-phone" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 1rem;">Call Us</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">+1 234 567 8900</p>
+                    <p style="opacity: 0.9;">Available 24/7 for emergencies</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 2rem; border-radius: 15px; text-align: center;">
+                    <i class="fas fa-envelope" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 1rem;">Email Us</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">info@premierhostel.com</p>
+                    <p style="opacity: 0.9;">Response within 24 hours</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 2rem; border-radius: 15px; text-align: center;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 1rem;">Visit Us</h3>
+                    <p style="font-size: 1.2rem; margin-bottom: 0.5rem;">123 University Avenue</p>
+                    <p style="opacity: 0.9;">City, State 12345</p>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+                <!-- Contact Form -->
+                <div class="table-container">
+                    <h3><i class="fas fa-paper-plane"></i> Send us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select Subject</option>
+                                <option value="Room Inquiry">Room Inquiry</option>
+                                <option value="Booking Assistance">Booking Assistance</option>
+                                <option value="Payment Issue">Payment Issue</option>
+                                <option value="Complaint">Complaint</option>
+                                <option value="Facility Question">Facility Question</option>
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Feedback">Feedback</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required rows="5" placeholder="Please describe your inquiry or message in detail"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="priority">Priority Level</label>
+                            <select id="priority" name="priority">
+                                <option value="Low">Low - General inquiry</option>
+                                <option value="Medium" selected>Medium - Standard request</option>
+                                <option value="High">High - Urgent matter</option>
+                                <option value="Emergency">Emergency - Immediate attention needed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Map and Office Hours -->
+                <div class="table-container">
+                    <h3><i class="fas fa-map"></i> Location & Hours</h3>
+                    
+                    <!-- Mock Map -->
+                    <div style="height: 200px; background: linear-gradient(135deg, #43e97b, #38f9d7); border-radius: 10px; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><circle cx=\"50\" cy=\"50\" r=\"2\" fill=\"white\" opacity=\"0.3\"/><circle cx=\"30\" cy=\"30\" r=\"1\" fill=\"white\" opacity=\"0.2\"/><circle cx=\"70\" cy=\"40\" r=\"1.5\" fill=\"white\" opacity=\"0.25\"/><circle cx=\"20\" cy=\"70\" r=\"1\" fill=\"white\" opacity=\"0.2\"/><circle cx=\"80\" cy=\"80\" r=\"1\" fill=\"white\" opacity=\"0.2\"/></svg>') repeat;"></div>
+                        <div style="text-align: center; z-index: 1;">
+                            <i class="fas fa-map-marker-alt" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                            <p>Premier Hostel Location</p>
+                            <p style="font-size: 0.9rem; opacity: 0.9;">Click to view on Google Maps</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">Office Hours</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.95rem;">
+                            <span><strong>Monday - Friday:</strong></span>
+                            <span>8:00 AM - 8:00 PM</span>
+                            <span><strong>Saturday:</strong></span>
+                            <span>9:00 AM - 6:00 PM</span>
+                            <span><strong>Sunday:</strong></span>
+                            <span>10:00 AM - 4:00 PM</span>
+                            <span><strong>Emergency:</strong></span>
+                            <span style="color: #f44336; font-weight: bold;">24/7 Available</span>
+                        </div>
+                    </div>
+
+                    <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px;">
+                        <h4 style="color: #4caf50; margin-bottom: 0.5rem;">Quick Response</h4>
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">For urgent matters, call our emergency hotline:</p>
+                        <p style="font-size: 1.1rem; font-weight: bold; color: #f44336;">+1 234 567 8911</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Department Contacts -->
+            <div class="table-container">
+                <h3><i class="fas fa-users"></i> Department Contacts</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #667eea;">
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">
+                            <i class="fas fa-user-tie"></i> Administration
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Director:</strong> Dr. John Smith</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8901</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> admin@premierhostel.com</p>
+                        <p style="color: #666; font-size: 0.9rem;">General management and policy matters</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #f093fb;">
+                        <h4 style="color: #f093fb; margin-bottom: 1rem;">
+                            <i class="fas fa-bed"></i> Room Allocation
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Manager:</strong> Sarah Johnson</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8902</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> rooms@premierhostel.com</p>
+                        <p style="color: #666; font-size: 0.9rem;">Room bookings and allocations</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #4facfe;">
+                        <h4 style="color: #4facfe; margin-bottom: 1rem;">
+                            <i class="fas fa-tools"></i> Maintenance
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Supervisor:</strong> Mike Wilson</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8903</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> maintenance@premierhostel.com</p>
+                        <p style="color: #666; font-size: 0.9rem;">Repairs and facility maintenance</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #43e97b;">
+                        <h4 style="color: #43e97b; margin-bottom: 1rem;">
+                            <i class="fas fa-credit-card"></i> Accounts
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Accountant:</strong> Lisa Brown</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8904</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> accounts@premierhostel.com</p>
+                        <p style="color: #666; font-size: 0.9rem;">Payments and billing inquiries</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #ff9800;">
+                        <h4 style="color: #ff9800; margin-bottom: 1rem;">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Head:</strong> James Davis</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8905</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Emergency:</strong> +1 234 567 8911</p>
+                        <p style="color: #666; font-size: 0.9rem;">Security and safety concerns</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9c27b0;">
+                        <h4 style="color: #9c27b0; margin-bottom: 1rem;">
+                            <i class="fas fa-hands-helping"></i> Student Services
+                        </h4>
+                        <p style="margin-bottom: 0.5rem;"><strong>Coordinator:</strong> Emma Wilson</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Phone:</strong> +1 234 567 8906</p>
+                        <p style="margin-bottom: 0.5rem;"><strong>Email:</strong> services@premierhostel.com</p>
+                        <p style="color: #666; font-size: 0.9rem;">Student support and activities</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="table-container">
+                <h3><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+                <div style="display: grid; gap: 1rem;">
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #667eea; margin-bottom: 0.5rem;">What are the check-in and check-out times?</h4>
+                        <p>Check-in: 2:00 PM onwards | Check-out: 11:00 AM. Early check-in and late check-out may be available upon request.</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #667eea; margin-bottom: 0.5rem;">How do I report a maintenance issue?</h4>
+                        <p>You can report maintenance issues through the Complaints section, call maintenance directly, or visit the front desk.</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #667eea; margin-bottom: 0.5rem;">What payment methods are accepted?</h4>
+                        <p>We accept UPI, net banking, credit/debit cards, and cash payments. Online payments are preferred for convenience.</p>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                        <h4 style="color: #667eea; margin-bottom: 0.5rem;">Is there a security deposit required?</h4>
+                        <p>Yes, a refundable security deposit is required at the time of check-in. The amount varies by room type.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-building"></i>
+                        <span>Premier Hostel</span>
+                    </div>
+                    <p>Providing comfortable and affordable accommodation for students and professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                    <p><i class="fas fa-envelope"></i> info@premierhostel.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 University Ave, City</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Premier Hostel Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Side Navigation Arrows -->
+    <div class="side-nav">
+        <a href="admin.html" class="side-nav-btn" title="Admin">
+            <i class="fas fa-user-shield"></i>
+        </a>
+        <a href="profile.html" class="side-nav-btn" title="Profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="index.html" class="side-nav-btn" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Contact page specific JavaScript
+        function initContactPage() {
+            console.log('Initializing Contact Page');
+            setupContactForm();
+        }
+
+        function setupContactForm() {
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitContactForm();
+                });
+            }
+        }
+
+        function submitContactForm() {
+            const formData = new FormData(document.getElementById('contactForm'));
+            
+            const contactData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                subject: formData.get('subject'),
+                message: formData.get('message'),
+                priority: formData.get('priority'),
+                date: new Date().toISOString().split('T')[0],
+                time: new Date().toLocaleTimeString()
+            };
+            
+            // Basic validation
+            if (!contactData.name || !contactData.email || !contactData.subject || !contactData.message) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(contactData.email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Simulate form submission
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span> Sending...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                // Reset form
+                document.getElementById('contactForm').reset();
+                
+                // Show success message
+                showNotification('Thank you for your message! We\'ll get back to you within 24 hours.', 'success');
+                
+                // Send admin alert
+                sendAdminAlert(`New contact form submission from ${contactData.name} - Subject: ${contactData.subject}`);
+                
+                // Simulate email confirmation
+                console.log(`Confirmation email sent to: ${contactData.email}`);
+                console.log('Contact form data:', contactData);
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+            }, 1500);
+        }
+
+        // Initialize when page loads
+        if (getCurrentPage() === 'contact') {
+            document.addEventListener('DOMContentLoaded', initContactPage);
+        }
+    </script>
+</body>
+</html>

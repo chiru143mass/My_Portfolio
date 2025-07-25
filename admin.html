@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hostel Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-building"></i>
+                <span>HMS</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="rooms.html" class="nav-link">Rooms</a></li>
+                <li class="nav-item"><a href="booking.html" class="nav-link">Booking</a></li>
+                <li class="nav-item"><a href="complaints.html" class="nav-link">Complaints</a></li>
+                <li class="nav-item"><a href="payment.html" class="nav-link">Payment</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link">Profile</a></li>
+                <li class="nav-item"><a href="admin.html" class="nav-link active">Admin</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Admin Dashboard</h1>
+            <p class="page-subtitle">Monitor and manage hostel operations</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <!-- Statistics Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">Total Rooms</h3>
+                            <div style="font-size: 2.5rem; font-weight: bold;" id="totalRooms">0</div>
+                        </div>
+                        <i class="fas fa-bed" style="font-size: 3rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">Occupied Rooms</h3>
+                            <div style="font-size: 2.5rem; font-weight: bold;" id="occupiedRooms">0</div>
+                        </div>
+                        <i class="fas fa-users" style="font-size: 3rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">Active Complaints</h3>
+                            <div style="font-size: 2.5rem; font-weight: bold;" id="activeComplaints">0</div>
+                        </div>
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">Monthly Revenue</h3>
+                            <div style="font-size: 2.5rem; font-weight: bold;" id="monthlyRevenue">₹0</div>
+                        </div>
+                        <i class="fas fa-rupee-sign" style="font-size: 3rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="table-container" style="margin-bottom: 2rem;">
+                <h3><i class="fas fa-lightning-bolt"></i> Quick Actions</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <button class="btn btn-primary" onclick="downloadAllData()" style="padding: 1rem;">
+                        <i class="fas fa-download"></i> Export All Data
+                    </button>
+                    <button class="btn btn-secondary" onclick="generateReports()" style="padding: 1rem;">
+                        <i class="fas fa-chart-bar"></i> Generate Reports
+                    </button>
+                    <button class="btn" style="background: #ff9800; color: white; padding: 1rem;" onclick="sendBulkNotifications()">
+                        <i class="fas fa-bullhorn"></i> Send Notifications
+                    </button>
+                    <button class="btn" style="background: #9c27b0; color: white; padding: 1rem;" onclick="backupData()">
+                        <i class="fas fa-save"></i> Backup Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div class="table-container">
+                    <h3><i class="fas fa-clock"></i> Recent Bookings</h3>
+                    <div id="recentBookings" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Recent bookings will be populated -->
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <h3><i class="fas fa-exclamation-circle"></i> Recent Complaints</h3>
+                    <div id="recentComplaints" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Recent complaints will be populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Status Overview -->
+            <div class="table-container" style="margin-bottom: 2rem;">
+                <h3><i class="fas fa-building"></i> Room Status Overview</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">By Floor</h4>
+                        <div id="roomsByFloor"></div>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">By Type</h4>
+                        <div id="roomsByType"></div>
+                    </div>
+                    <div>
+                        <h4 style="color: #667eea; margin-bottom: 1rem;">By Status</h4>
+                        <div id="roomsByStatus"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Overview -->
+            <div class="table-container">
+                <h3><i class="fas fa-credit-card"></i> Payment Overview</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #4caf50; margin-bottom: 0.5rem;">Paid This Month</h4>
+                        <div style="font-size: 1.5rem; font-weight: bold;" id="paidThisMonth">₹0</div>
+                    </div>
+                    <div style="background: #fff3cd; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #f57c00; margin-bottom: 0.5rem;">Pending Payments</h4>
+                        <div style="font-size: 1.5rem; font-weight: bold;" id="pendingPayments">₹0</div>
+                    </div>
+                    <div style="background: #f8d7da; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <h4 style="color: #dc3545; margin-bottom: 0.5rem;">Overdue</h4>
+                        <div style="font-size: 1.5rem; font-weight: bold;" id="overduePayments">₹0</div>
+                    </div>
+                </div>
+
+                <table id="recentPaymentsTable">
+                    <thead>
+                        <tr>
+                            <th>Payment ID</th>
+                            <th>Student</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentPaymentsBody">
+                        <!-- Recent payments will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-building"></i>
+                        <span>Premier Hostel</span>
+                    </div>
+                    <p>Providing comfortable and affordable accommodation for students and professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                    <p><i class="fas fa-envelope"></i> info@premierhostel.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 University Ave, City</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Premier Hostel Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Side Navigation Arrows -->
+    <div class="side-nav">
+        <a href="profile.html" class="side-nav-btn" title="Profile">
+            <i class="fas fa-user"></i>
+        </a>
+        <a href="contact.html" class="side-nav-btn" title="Contact">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="index.html" class="side-nav-btn" title="Home">
+            <i class="fas fa-home"></i>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

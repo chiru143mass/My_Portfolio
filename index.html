@@ -1,95 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Professional Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Hostel Management System - Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-
 <body>
-
-    <!-- Header Section -->
-    <header>
-        <div class="container">
-            <h1>Welcome to My Portfolio</h1>
-            <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-        <div class="container about-section">
-            <div class="about-photo">
-                <img src="1000081093 (1).png" alt="My Photo" class="profile-photo">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-building"></i>
+                <span>HMS</span>
             </div>
-            <div class="about-text">
-                <h2>About Me</h2>
-                <p>Hello! I'm Malapalli Suryam, a passionate web developer with experience in front-end development. I love creating intuitive and responsive websites using modern technologies.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section id="skills" class="section">
-        <div class="container">
-            <h2>Skills</h2>
-            <ul class="skills-list">
-                <li>HTML & CSS</li>
-                <li>JavaScript</li>
-                <li>Python</li>
-                <li>Power BI</li>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="rooms.html" class="nav-link">Rooms</a>
+                </li>
+                <li class="nav-item">
+                    <a href="booking.html" class="nav-link">Booking</a>
+                </li>
+                <li class="nav-item">
+                    <a href="complaints.html" class="nav-link">Complaints</a>
+                </li>
+                <li class="nav-item">
+                    <a href="payment.html" class="nav-link">Payment</a>
+                </li>
+                <li class="nav-item">
+                    <a href="profile.html" class="nav-link">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin.html" class="nav-link">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
             </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to Premier Hostel</h1>
+            <p class="hero-subtitle">Your Home Away From Home</p>
+            <p class="hero-description">Experience comfortable living with modern amenities, friendly community, and affordable pricing in our well-maintained hostel facility.</p>
+            <div class="hero-buttons">
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hostel-building"></div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects" class="section">
+    <!-- Features Section -->
+    <section id="features" class="features">
         <div class="container">
-            <h2>Projects</h2>
-            <div class="project-item">
-                <h3>Portfolio Website</h3>
-                <p>A sleek and responsive personal portfolio website created using HTML, CSS, and JavaScript.</p>
-            </div>
-            <div class="project-item">
-                <h3>Frontend Roadmap</h3>
-                <p>A simple and visually appealing front-end roadmap webpage that guides aspiring developers through essential skills and technologies from HTML to advanced frameworks.</p>
+            <h2 class="section-title">Why Choose Our Hostel?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Comfortable Rooms</h3>
+                    <p>Spacious and well-furnished rooms with modern amenities for a comfortable stay.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Free WiFi</h3>
+                    <p>High-speed internet connectivity available 24/7 throughout the hostel premises.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Dining Facility</h3>
+                    <p>Nutritious and delicious meals served in our clean and hygienic dining hall.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>24/7 Security</h3>
+                    <p>Round-the-clock security with CCTV monitoring for your safety and peace of mind.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>Recreation</h3>
+                    <p>Common areas with games, TV, and recreational facilities for relaxation and fun.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Community</h3>
+                    <p>Vibrant community of students and professionals creating a friendly environment.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section">
+    <!-- Gallery Section -->
+    <section class="gallery">
         <div class="container">
-            <h2>Contact</h2>
-            <div class="contact-links">
-                <a href="mailto:malapallisuryam2@gmail.com"><i class="fas fa-envelope"></i> Email </a>
-                <a href="https://wa.me/7075625401"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="tel:+7075625401"><i class="fas fa-phone"></i> Call Me</a>
-                <a href="https://www.instagram.com/malapallisuryam?igsh=YzljYTk1ODg3Zg=="><i class="fab fa-instagram"></i> Instagram</a>
-                <a href="https://www.linkedin.com/in/malapalli-suryam-667a6a30a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                <a href="https://www.facebook.com/profile.php?id=61556555647965"><i class="fab fa-facebook"></i> Facebook</a>
+            <h2 class="section-title">Hostel Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-image room-image"></div>
+                    <h4>Deluxe Room</h4>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image dining-image"></div>
+                    <h4>Dining Hall</h4>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image common-image"></div>
+                    <h4>Common Area</h4>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image study-image"></div>
+                    <h4>Study Room</h4>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <!-- Stats Section -->
+    <section class="stats">
         <div class="container">
-            <p>&copy; 2025 Malapalli Suryam. All rights reserved.</p>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-target="150">0</div>
+                    <div class="stat-label">Total Rooms</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="500">0</div>
+                    <div class="stat-label">Happy Students</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="5">0</div>
+                    <div class="stat-label">Years Experience</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Hours Support</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-building"></i>
+                        <span>Premier Hostel</span>
+                    </div>
+                    <p>Providing comfortable and affordable accommodation for students and professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="rooms.html">Rooms</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +1 234 567 8900</p>
+                    <p><i class="fas fa-envelope"></i> info@premierhostel.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 University Ave, City</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Premier Hostel Management System. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
+    <!-- Side Navigation Arrows -->
+    <div class="side-nav">
+        <a href="rooms.html" class="side-nav-btn" title="Rooms">
+            <i class="fas fa-bed"></i>
+        </a>
+        <a href="booking.html" class="side-nav-btn" title="Booking">
+            <i class="fas fa-calendar-plus"></i>
+        </a>
+        <a href="payment.html" class="side-nav-btn" title="Payment">
+            <i class="fas fa-credit-card"></i>
+        </a>
+    </div>
+
     <script src="script.js"></script>
 </body>
-
 </html>

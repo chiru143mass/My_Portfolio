@@ -23,7 +23,65 @@ document.addEventListener('DOMContentLoaded', function() {
     startAnimations();
     initializeLiveMatches();
     updateOnlineStats();
+    addDynamicStyles();
 });
+
+// Add Dynamic Styles
+function addDynamicStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .entry-amount-btn {
+            padding: 15px;
+            margin: 5px;
+            border: 2px solid #00d2ff;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .entry-amount-btn:hover,
+        .entry-amount-btn.selected {
+            background: #00d2ff;
+            transform: scale(1.05);
+        }
+        .entry-amounts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .match-type {
+            margin: 20px 0;
+        }
+        .match-type label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .chat-message {
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+        .chat-message.me {
+            background: #00d2ff;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        .chat-message.opponent {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    `;
+    document.head.appendChild(style);
+}
 
 // Initialize Application
 function initializeApp() {
@@ -52,19 +110,31 @@ function initializeApp() {
         referralEarnings = parseFloat(savedEarnings);
         document.getElementById('referralEarnings').textContent = `₹${referralEarnings}`;
     }
+    
+    // Generate unique referral code for user
+    if (!localStorage.getItem('userReferralCode')) {
+        const referralCode = generateRandomReferralCode();
+        localStorage.setItem('userReferralCode', referralCode);
+        document.getElementById('referralCode').value = referralCode;
+    } else {
+        document.getElementById('referralCode').value = localStorage.getItem('userReferralCode');
+    }
+    
+    // Auto-save progress
+    setInterval(autoSaveProgress, 30000); // Save every 30 seconds
+    
+    // Check daily bonus
+    checkDailyBonus();
 }
 
 // WebSocket Connection for Real-time Gaming
 function connectToGameServer() {
-    // In a real implementation, this would connect to your game server
-    // For demo purposes, we'll simulate WebSocket behavior
     console.log('Connecting to game server...');
     
     // Simulate WebSocket connection
     websocket = {
         send: function(data) {
             console.log('Sending:', data);
-            // Simulate server response
             setTimeout(() => {
                 handleWebSocketMessage(JSON.parse(data));
             }, 1000);
@@ -122,17 +192,54 @@ function setupEventListeners() {
         }
     });
     
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAllModals();
+        }
+        if (e.ctrlKey && e.key === 'Enter') {
+            const registerModal = document.getElementById('registerModal');
+            if (registerModal.style.display === 'block') {
+                handleRegistration(e);
+            }
+        }
+    });
+    
+    // Touch gestures for mobile
+    let touchStartY = 0;
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchend', function(e) {
+        const touchEndY = e.changedTouches[0].clientY;
+        const diff = touchStartY - touchEndY;
+        
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                // Swipe up - could trigger quick actions
+                console.log('Swipe up detected');
+            } else {
+                // Swipe down - could refresh content
+                console.log('Swipe down detected');
+            }
+        }
+    });
+    
     startTournamentCountdowns();
     setupGameEventListeners();
 }
 
 function setupGameEventListeners() {
     // Chat functionality
-    document.getElementById('chatInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
-        }
-    });
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
 }
 
 // Real Multiplayer Game Functions
@@ -239,11 +346,11 @@ function searchForOpponent(gameType) {
     
     showNotification('Searching for opponent...', 'info');
     
-    // Simulate finding opponent (in real app, this would be handled by server)
+    // Simulate finding opponent
     setTimeout(() => {
         const opponent = generateRandomOpponent();
         handleOpponentFound(opponent);
-    }, Math.random() * 5000 + 2000); // 2-7 seconds
+    }, Math.random() * 5000 + 2000);
 }
 
 function generateRandomOpponent() {
@@ -264,8 +371,6 @@ function handleOpponentFound(opponent) {
     document.getElementById('opponentStatus').className = 'player-status online';
     
     showNotification(`Opponent found: ${opponent.name}`, 'success');
-    
-    // Start game countdown
     startGameCountdown();
 }
 
@@ -302,7 +407,6 @@ function startTurnTimer() {
         }
     }, 1000);
     
-    // Store timer for cleanup
     currentGameSession = { timer: timer };
 }
 
@@ -316,7 +420,6 @@ function switchTurn() {
     document.getElementById('turnText').textContent = isMyTurn ? "Opponent's turn" : 'Your turn';
     
     if (isMyTurn) {
-        // Simulate opponent move
         setTimeout(() => {
             simulateOpponentMove();
         }, Math.random() * 10000 + 2000);
@@ -328,7 +431,6 @@ function switchTurn() {
 function simulateOpponentMove() {
     showNotification('Opponent made a move', 'info');
     
-    // Random chance of game ending
     if (Math.random() > 0.7) {
         endGame(Math.random() > 0.5);
     } else {
@@ -342,7 +444,7 @@ function endGame(playerWon) {
         clearInterval(currentGameSession.timer);
     }
     
-    const winAmount = selectedEntryAmount * 1.8; // 80% return (20% platform fee)
+    const winAmount = selectedEntryAmount * 1.8;
     
     if (playerWon) {
         currentBalance += winAmount;
@@ -350,12 +452,12 @@ function endGame(playerWon) {
         saveBalance();
         showNotification(`Congratulations! You won ₹${winAmount.toFixed(2)}!`, 'success');
         document.getElementById('turnText').textContent = 'You Won! 🎉';
+        checkAchievements('win');
     } else {
         showNotification('Better luck next time!', 'error');
         document.getElementById('turnText').textContent = 'You Lost 😞';
     }
     
-    // Show play again option
     setTimeout(() => {
         const playAgain = confirm('Game finished! Want to play again?');
         if (playAgain) {
@@ -414,38 +516,34 @@ function makeTicTacToeMove(index) {
         return;
     }
     
-    // Make move
     currentGameSession.board[index] = currentGameSession.playerSymbol;
     const cell = document.querySelector(`.tic-cell[data-index="${index}"]`);
     cell.textContent = currentGameSession.playerSymbol;
     cell.classList.add('x');
     
-    // Check for win
     if (checkTicTacToeWin(currentGameSession.playerSymbol)) {
         endGame(true);
         return;
     }
     
-    // Check for draw
     if (currentGameSession.board.every(cell => cell !== null)) {
         showNotification('Game Draw!', 'info');
-        currentBalance += selectedEntryAmount; // Return entry fee
+        currentBalance += selectedEntryAmount;
         updateBalanceDisplay();
         saveBalance();
         setTimeout(() => leaveGame(), 2000);
         return;
     }
     
-    // Switch turn
     clearInterval(currentGameSession.timer);
     switchTurn();
 }
 
 function checkTicTacToeWin(symbol) {
     const winPatterns = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-        [0, 4, 8], [2, 4, 6] // Diagonals
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
     ];
     
     return winPatterns.some(pattern => 
@@ -472,18 +570,13 @@ function initializeRockPaperScissorsBoard(container) {
 function makeRPSMove(choice) {
     if (document.getElementById('turnText').textContent !== 'Your turn') return;
     
-    // Highlight selected choice
     document.querySelectorAll('.rps-choice').forEach(el => el.classList.remove('selected'));
     document.querySelector(`[data-choice="${choice}"]`).classList.add('selected');
     
-    // Generate opponent choice
     const choices = ['rock', 'paper', 'scissors'];
     const opponentChoice = choices[Math.floor(Math.random() * 3)];
-    
-    // Determine winner
     const result = determineRPSWinner(choice, opponentChoice);
     
-    // Show results
     const resultDiv = document.getElementById('rpsResult');
     const outcomeDiv = document.getElementById('rpsOutcome');
     
@@ -495,14 +588,12 @@ function makeRPSMove(choice) {
     
     resultDiv.style.display = 'block';
     
-    // End game based on result
     setTimeout(() => {
         if (result === 'You Win!') {
             endGame(true);
         } else if (result === 'You Lose!') {
             endGame(false);
         } else {
-            // Draw - play again
             resultDiv.style.display = 'none';
             document.querySelectorAll('.rps-choice').forEach(el => el.classList.remove('selected'));
             showNotification('Draw! Play again', 'info');
@@ -523,30 +614,23 @@ function determineRPSWinner(player, opponent) {
 }
 
 function getEmoji(choice) {
-    const emojis = {
-        rock: '🪨',
-        paper: '📄',
-        scissors: '✂️'
-    };
+    const emojis = { rock: '🪨', paper: '📄', scissors: '✂️' };
     return emojis[choice];
 }
 
 function initializeLudoBoard(container) {
     container.className = 'ludo-board';
-    // Complex Ludo board implementation would go here
     container.innerHTML = '<div style="padding: 2rem; text-align: center; color: white;">Ludo board will be rendered here with full gameplay mechanics</div>';
 }
 
 function initializeSnakeLadderBoard(container) {
     container.className = 'snake-ladder-board';
-    // Snake and Ladder board implementation
     for (let i = 100; i >= 1; i--) {
         const cell = document.createElement('div');
         cell.className = 'snake-cell';
         cell.textContent = i;
         cell.dataset.number = i;
         
-        // Add special cells (snakes and ladders)
         if ([16, 47, 49, 56, 62, 64, 87, 93, 95, 98].includes(i)) {
             cell.classList.add('snake-head');
         }
@@ -568,7 +652,6 @@ function sendMessage() {
     addChatMessage(currentUser.name, message, true);
     chatInput.value = '';
     
-    // Send to opponent (simulated)
     if (websocket) {
         websocket.send(JSON.stringify({
             type: 'chat_message',
@@ -576,7 +659,6 @@ function sendMessage() {
         }));
     }
     
-    // Simulate opponent response
     setTimeout(() => {
         const responses = ['Good move!', 'Nice game!', '😊', 'GL HF!', 'Well played'];
         const response = responses[Math.floor(Math.random() * responses.length)];
@@ -599,8 +681,7 @@ function handleChatMessage(data) {
 
 // Game Utility Functions
 function getCurrentGameType() {
-    // Extract game type from current session or UI
-    return 'tic-tac-toe'; // Default for demo
+    return 'tic-tac-toe';
 }
 
 function getGameData(gameType) {
@@ -645,7 +726,6 @@ function leaveGame() {
     
     currentGameSession = null;
     
-    // Clean up
     document.getElementById('chatMessages').innerHTML = '';
     document.getElementById('gameBoard').innerHTML = '';
 }
@@ -673,7 +753,6 @@ function createPrivateRoom() {
     
     showNotification(`Room created! Code: ${roomCode}`, 'success');
     
-    // In real implementation, this would create a room on the server
     prompt(`Share this room code with your friend: ${roomCode}`);
 }
 
@@ -684,7 +763,7 @@ function generateRoomCode() {
 // Live Matches
 function initializeLiveMatches() {
     generateLiveMatches();
-    setInterval(generateLiveMatches, 10000); // Update every 10 seconds
+    setInterval(generateLiveMatches, 10000);
 }
 
 function generateLiveMatches() {
@@ -698,28 +777,27 @@ function generateLiveMatches() {
         const entryFee = [10, 25, 50, 100, 250][Math.floor(Math.random() * 5)];
         
         matches.push({
-            id: 'match_' + Math.random().toString(36).substr(2, 9),
+            id: 'match_' + i,
             game: game,
             player1: player1,
             player2: player2,
             entryFee: entryFee,
-            spectators: Math.floor(Math.random() * 50) + 1
+            spectators: Math.floor(Math.random() * 50) + 10
         });
     }
     
     activeMatches = matches;
-    displayLiveMatches();
+    displayLiveMatches(matches);
 }
 
-function displayLiveMatches() {
+function displayLiveMatches(matches) {
     const container = document.getElementById('liveMatchesList');
-    if (!container) return;
     
-    container.innerHTML = activeMatches.map(match => `
+    container.innerHTML = matches.map(match => `
         <div class="live-match-card" data-game="${match.game}">
             <div class="match-header">
                 <h4>${getGameData(match.game).name}</h4>
-                <span class="live-badge">LIVE</span>
+                <span>₹${match.entryFee} Entry</span>
             </div>
             <div class="match-players">
                 <div class="match-player">
@@ -733,11 +811,10 @@ function displayLiveMatches() {
                 </div>
             </div>
             <div class="match-info">
-                <p>Entry: ₹${match.entryFee}</p>
-                <p>Spectators: ${match.spectators}</p>
+                <span><i class="fas fa-eye"></i> ${match.spectators} watching</span>
             </div>
             <button class="spectate-btn" onclick="spectateMatch('${match.id}')">
-                👁️ Spectate
+                <i class="fas fa-eye"></i> Spectate
             </button>
         </div>
     `).join('');
@@ -747,44 +824,40 @@ function filterMatches(gameType) {
     document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
     event.target.classList.add('active');
     
-    const matchCards = document.querySelectorAll('.live-match-card');
-    matchCards.forEach(card => {
-        if (gameType === 'all' || card.dataset.game === gameType) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
+    const filteredMatches = gameType === 'all' ? 
+        activeMatches : 
+        activeMatches.filter(match => match.game === gameType);
+    
+    displayLiveMatches(filteredMatches);
 }
 
 function spectateMatch(matchId) {
-    showNotification('Joining match as spectator...', 'info');
-    // In real implementation, this would join a live match
-    setTimeout(() => {
-        showNotification('You are now spectating the match!', 'success');
-    }, 1500);
+    showNotification('Spectating feature coming soon!', 'info');
 }
 
-// Online Stats Update
+// Online Stats
 function updateOnlineStats() {
     setInterval(() => {
-        onlinePlayers += Math.floor(Math.random() * 20) - 10; // Random fluctuation
-        onlinePlayers = Math.max(1000, onlinePlayers); // Minimum 1000 players
+        onlinePlayers += Math.floor(Math.random() * 10) - 5;
+        onlinePlayers = Math.max(1000, Math.min(5000, onlinePlayers));
         
         document.getElementById('onlineCount').textContent = `${onlinePlayers.toLocaleString()} Online`;
         document.getElementById('livePlayersCount').textContent = onlinePlayers.toLocaleString();
         
-        // Update live player counts in games
-        document.querySelectorAll('.live-indicator span').forEach(span => {
-            if (!span.textContent.includes('Playing')) return;
-            const currentCount = parseInt(span.textContent.split(' ')[0]);
-            const newCount = currentCount + Math.floor(Math.random() * 10) - 5;
-            span.textContent = `${Math.max(50, newCount)} Playing`;
-        });
-    }, 5000);
+        updateLivePlayerCounts();
+    }, 15000);
 }
 
-// User Authentication Functions
+function updateLivePlayerCounts() {
+    document.querySelectorAll('.live-indicator span').forEach(span => {
+        if (span.textContent.includes('Playing')) {
+            const count = Math.floor(Math.random() * 500) + 50;
+            span.textContent = `${count} Playing`;
+        }
+    });
+}
+
+// Authentication Functions
 function showLoginModal() {
     document.getElementById('loginModal').style.display = 'block';
 }
@@ -794,13 +867,23 @@ function showRegisterModal() {
 }
 
 function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
+    document.getElementById(modalId).style.display = 'none';
+    
+    // Clean up entry modal if it exists
+    const entryModal = document.getElementById('entryModal');
+    if (entryModal) {
+        entryModal.remove();
+    }
+}
+
+function closeAllModals() {
+    document.querySelectorAll('.modal').forEach(modal => {
         modal.style.display = 'none';
-        // Remove dynamically created modals
-        if (modalId === 'entryModal') {
-            modal.remove();
-        }
+    });
+    
+    const entryModal = document.getElementById('entryModal');
+    if (entryModal) {
+        entryModal.remove();
     }
 }
 
@@ -820,26 +903,26 @@ function handleLogin(event) {
     const mobile = document.getElementById('loginMobile').value;
     const password = document.getElementById('loginPassword').value;
     
-    if (mobile && password) {
-        currentUser = {
-            name: 'Player_' + mobile.slice(-4),
-            mobile: mobile,
-            id: 'user_' + Math.random().toString(36).substr(2, 9),
-            balance: currentBalance
-        };
-        
-        localStorage.setItem('gameUser', JSON.stringify(currentUser));
-        closeModal('loginModal');
-        updateUIForLoggedInUser();
-        connectToGameServer();
-        showNotification('Login successful! Welcome back!', 'success');
-        
-        if (currentBalance === 0) {
-            addWelcomeBonus();
-        }
-    } else {
-        showNotification('Please fill all fields', 'error');
+    if (mobile.length !== 10) {
+        showNotification('Please enter a valid 10-digit mobile number', 'error');
+        return;
     }
+    
+    // Simulate login
+    currentUser = {
+        name: 'Player_' + mobile.substr(-4),
+        mobile: mobile,
+        email: mobile + '@gamezonepro.com',
+        joinDate: new Date().toISOString()
+    };
+    
+    localStorage.setItem('gameUser', JSON.stringify(currentUser));
+    updateUIForLoggedInUser();
+    closeModal('loginModal');
+    showNotification('Login successful!', 'success');
+    
+    // Connect to game server
+    connectToGameServer();
 }
 
 function handleRegistration(event) {
@@ -850,74 +933,74 @@ function handleRegistration(event) {
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
     const referralCode = document.getElementById('registerReferral').value;
-    const termsAccepted = document.getElementById('terms').checked;
     
-    if (!name || !mobile || !email || !password) {
-        showNotification('Please fill all required fields', 'error');
+    if (mobile.length !== 10) {
+        showNotification('Please enter a valid 10-digit mobile number', 'error');
         return;
     }
     
-    if (!termsAccepted) {
-        showNotification('Please accept Terms & Conditions', 'error');
-        return;
-    }
-    
-    currentUser = {
-        name: name,
-        mobile: mobile,
-        email: email,
-        id: 'user_' + Math.random().toString(36).substr(2, 9),
-        balance: 0
-    };
-    
-    localStorage.setItem('gameUser', JSON.stringify(currentUser));
-    closeModal('registerModal');
-    updateUIForLoggedInUser();
-    connectToGameServer();
-    
+    // Process referral
     if (referralCode) {
         processReferral(referralCode);
     }
     
-    addWelcomeBonus();
-    showNotification('Registration successful! Welcome bonus added!', 'success');
+    // Create user
+    currentUser = {
+        name: name,
+        mobile: mobile,
+        email: email,
+        joinDate: new Date().toISOString()
+    };
+    
+    // Welcome bonus
+    currentBalance = 100;
+    updateBalanceDisplay();
+    saveBalance();
+    
+    localStorage.setItem('gameUser', JSON.stringify(currentUser));
+    updateUIForLoggedInUser();
+    closeModal('registerModal');
+    showNotification('Registration successful! Welcome bonus ₹100 added!', 'success');
+    
+    // Connect to game server
+    connectToGameServer();
+}
+
+function processReferral(code) {
+    if (code && code !== localStorage.getItem('userReferralCode')) {
+        currentBalance += 50; // Bonus for using referral
+        showNotification('Referral bonus ₹50 added!', 'success');
+    }
 }
 
 function updateUIForLoggedInUser() {
-    if (currentUser) {
-        const authDiv = document.querySelector('.nav-auth');
-        authDiv.innerHTML = `
-            <div class="wallet-display">
-                <i class="fas fa-wallet"></i>
-                <span id="balance">₹${currentBalance.toFixed(2)}</span>
-            </div>
-            <div class="online-status">
-                <div class="online-dot"></div>
-                <span id="onlineCount">${onlinePlayers.toLocaleString()} Online</span>
-            </div>
-            <div class="user-menu">
-                <span>Hi, ${currentUser.name}</span>
-                <button class="btn-secondary" onclick="logout()">Logout</button>
-            </div>
-        `;
-    }
+    const authButtons = document.querySelector('.nav-auth');
+    authButtons.innerHTML = `
+        <div class="wallet-display">
+            <i class="fas fa-wallet"></i>
+            <span id="balance">₹${currentBalance.toFixed(2)}</span>
+        </div>
+        <div class="online-status">
+            <div class="online-dot"></div>
+            <span id="onlineCount">${onlinePlayers.toLocaleString()} Online</span>
+        </div>
+        <div class="user-menu">
+            <span>Welcome, ${currentUser.name}</span>
+            <button class="btn-secondary" onclick="logout()">Logout</button>
+        </div>
+    `;
 }
 
 function logout() {
-    if (websocket) {
-        websocket.close();
-    }
     currentUser = null;
     localStorage.removeItem('gameUser');
+    
+    if (websocket) {
+        websocket.close();
+        websocket = null;
+    }
+    
     location.reload();
-}
-
-function addWelcomeBonus() {
-    const bonus = 100;
-    currentBalance += bonus;
-    updateBalanceDisplay();
-    saveBalance();
-    showNotification(`Welcome bonus of ₹${bonus} added!`, 'success');
 }
 
 // Wallet Functions
@@ -925,18 +1008,11 @@ function selectAmount(amount) {
     document.querySelectorAll('.amount-btn').forEach(btn => {
         btn.classList.remove('active');
     });
-    
     event.target.classList.add('active');
     document.getElementById('customAmount').value = amount;
 }
 
 function addMoney() {
-    if (!currentUser) {
-        showNotification('Please login first', 'error');
-        showLoginModal();
-        return;
-    }
-    
     const amount = parseFloat(document.getElementById('customAmount').value);
     
     if (!amount || amount < 10) {
@@ -944,43 +1020,19 @@ function addMoney() {
         return;
     }
     
-    if (amount > 50000) {
-        showNotification('Maximum amount is ₹50,000', 'error');
-        return;
-    }
-    
-    processPayment(amount);
-}
-
-function processPayment(amount) {
-    showNotification('Processing payment...', 'info');
-    
+    // Simulate payment
     setTimeout(() => {
-        const success = Math.random() > 0.1; // 90% success rate
-        
-        if (success) {
-            currentBalance += amount;
-            updateBalanceDisplay();
-            saveBalance();
-            showNotification(`₹${amount} added successfully!`, 'success');
-            
-            document.getElementById('customAmount').value = '';
-            document.querySelectorAll('.amount-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-        } else {
-            showNotification('Payment failed. Please try again.', 'error');
-        }
+        currentBalance += amount;
+        updateBalanceDisplay();
+        saveBalance();
+        showNotification(`₹${amount} added successfully!`, 'success');
+        document.getElementById('customAmount').value = '';
     }, 2000);
+    
+    showNotification('Processing payment...', 'info');
 }
 
 function withdrawMoney() {
-    if (!currentUser) {
-        showNotification('Please login first', 'error');
-        showLoginModal();
-        return;
-    }
-    
     const amount = parseFloat(document.getElementById('withdrawAmount').value);
     const method = document.getElementById('withdrawMethod').value;
     
@@ -1003,8 +1055,7 @@ function withdrawMoney() {
     updateBalanceDisplay();
     saveBalance();
     
-    showNotification(`Withdrawal of ₹${amount} initiated. Will be processed in 24-48 hours.`, 'success');
-    
+    showNotification(`Withdrawal of ₹${amount} initiated. You'll receive it in 24-48 hours.`, 'success');
     document.getElementById('withdrawAmount').value = '';
     document.getElementById('withdrawMethod').value = '';
 }
@@ -1021,7 +1072,7 @@ function saveBalance() {
 }
 
 // Tournament Functions
-function joinTournament(tournamentName, entryFee) {
+function joinTournament(tournamentId, entryFee) {
     if (!currentUser) {
         showNotification('Please login to join tournaments', 'error');
         showLoginModal();
@@ -1029,7 +1080,7 @@ function joinTournament(tournamentName, entryFee) {
     }
     
     if (currentBalance < entryFee) {
-        showNotification('Insufficient balance. Please add money.', 'error');
+        showNotification('Insufficient balance', 'error');
         return;
     }
     
@@ -1037,102 +1088,95 @@ function joinTournament(tournamentName, entryFee) {
     updateBalanceDisplay();
     saveBalance();
     
-    showNotification(`Joined ${tournamentName}! Good luck!`, 'success');
+    showNotification(`Joined tournament! Entry fee ₹${entryFee} deducted.`, 'success');
 }
 
 function startTournamentCountdowns() {
-    // Update tournament timers
-    setInterval(() => {
-        updateTournamentTimer('tournament1Timer');
-        updateTournamentTimer('tournament2Timer');
-        updateTournamentPlayers();
-    }, 60000); // Update every minute
-}
-
-function updateTournamentTimer(elementId) {
-    const element = document.getElementById(elementId);
-    if (!element) return;
+    const tournaments = [
+        { id: 'tournament1Timer', hours: 2, minutes: 45 },
+        { id: 'tournament2Timer', hours: 5, minutes: 20 }
+    ];
     
-    // Simulate countdown
-    let timeText = element.textContent;
-    let [hours, minutes] = timeText.split('h ')[0] !== timeText ? 
-        [parseInt(timeText.split('h ')[0]), parseInt(timeText.split('h ')[1].replace('m', ''))] :
-        [0, parseInt(timeText.replace('m', ''))];
+    tournaments.forEach(tournament => {
+        let totalMinutes = tournament.hours * 60 + tournament.minutes;
+        
+        setInterval(() => {
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            
+            const element = document.getElementById(tournament.id);
+            if (element) {
+                element.textContent = `${hours}h ${minutes}m`;
+            }
+            
+            totalMinutes--;
+            if (totalMinutes < 0) {
+                totalMinutes = Math.floor(Math.random() * 360) + 60; // Reset to random time
+            }
+        }, 60000); // Update every minute
+    });
     
-    minutes--;
-    if (minutes < 0) {
-        hours--;
-        minutes = 59;
-    }
-    
-    if (hours < 0) {
-        hours = 23; // Reset to new tournament
-        minutes = 59;
-    }
-    
-    element.textContent = hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+    updateTournamentPlayers();
 }
 
 function updateTournamentPlayers() {
-    ['tournament1Players', 'tournament2Players'].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            let currentCount = parseInt(element.textContent.replace(',', ''));
-            currentCount += Math.floor(Math.random() * 20) - 5;
-            element.textContent = Math.max(100, currentCount).toLocaleString();
+    setInterval(() => {
+        const tournament1 = document.getElementById('tournament1Players');
+        const tournament2 = document.getElementById('tournament2Players');
+        
+        if (tournament1) {
+            const count1 = parseInt(tournament1.textContent.replace(',', '')) + Math.floor(Math.random() * 10) - 5;
+            tournament1.textContent = Math.max(1000, count1).toLocaleString();
         }
-    });
+        
+        if (tournament2) {
+            const count2 = parseInt(tournament2.textContent.replace(',', '')) + Math.floor(Math.random() * 8) - 4;
+            tournament2.textContent = Math.max(800, count2).toLocaleString();
+        }
+    }, 30000);
 }
 
 // Referral Functions
-function processReferral(referralCode) {
-    if (referralCode && referralCode.length > 0) {
-        const bonus = 25; // Bonus for using referral code
-        currentBalance += bonus;
-        updateBalanceDisplay();
-        saveBalance();
-        showNotification(`Referral bonus of ₹${bonus} added!`, 'success');
-    }
+function generateRandomReferralCode() {
+    return 'GAME' + Math.random().toString(36).substr(2, 6).toUpperCase();
 }
 
 function copyReferralCode() {
-    const referralCode = document.getElementById('referralCode').value;
-    navigator.clipboard.writeText(referralCode).then(() => {
-        showNotification('Referral code copied!', 'success');
-    });
+    const referralCode = document.getElementById('referralCode');
+    referralCode.select();
+    document.execCommand('copy');
+    showNotification('Referral code copied!', 'success');
 }
 
 function shareWhatsApp() {
-    const referralCode = document.getElementById('referralCode').value;
-    const message = `🎮 Join GameZone Pro and win real money! Use my referral code: ${referralCode} and get ₹50 bonus. Play live multiplayer games: https://gamezonepro.com`;
-    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    const code = document.getElementById('referralCode').value;
+    const message = `Join GameZone Pro and start winning real money! Use my referral code: ${code} and get ₹50 bonus! Download now: ${window.location.origin}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 function shareTelegram() {
-    const referralCode = document.getElementById('referralCode').value;
-    const message = `🎮 Join GameZone Pro and win real money! Use my referral code: ${referralCode} and get ₹50 bonus. Play live multiplayer games: https://gamezonepro.com`;
-    const url = `https://t.me/share/url?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    const code = document.getElementById('referralCode').value;
+    const message = `Join GameZone Pro with my referral code: ${code} and get ₹50 bonus!`;
+    window.open(`https://t.me/share/url?url=${window.location.origin}&text=${encodeURIComponent(message)}`, '_blank');
 }
 
 function shareFacebook() {
-    const url = `https://www.facebook.com/sharer/sharer.php?u=https://gamezonepro.com`;
-    window.open(url, '_blank');
+    const url = `${window.location.origin}?ref=${document.getElementById('referralCode').value}`;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
 }
 
 // Utility Functions
 function showNotification(message, type = 'info') {
     const notification = document.getElementById('notification');
-    const text = document.getElementById('notificationText');
+    const notificationText = document.getElementById('notificationText');
     
-    text.textContent = message;
+    notificationText.textContent = message;
     notification.className = `notification ${type}`;
     notification.style.display = 'block';
     
     setTimeout(() => {
-        closeNotification();
-    }, 3000);
+        notification.style.display = 'none';
+    }, 4000);
 }
 
 function closeNotification() {
@@ -1140,12 +1184,23 @@ function closeNotification() {
 }
 
 function loadUserData() {
-    if (currentUser) {
-        updateBalanceDisplay();
+    // Load any additional user data from localStorage
+    const savedData = localStorage.getItem('gameUserData');
+    if (savedData) {
+        try {
+            const userData = JSON.parse(savedData);
+            // Apply any saved user preferences
+        } catch (e) {
+            console.log('Error loading user data:', e);
+        }
     }
 }
 
 function startAnimations() {
+    // Animate prize pools
+    animatePrizePools();
+    
+    // Intersection Observer for scroll animations
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -1154,107 +1209,96 @@ function startAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
             }
         });
     }, observerOptions);
     
+    // Observe elements for animation
     document.querySelectorAll('.game-card, .tournament-card, .wallet-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'all 0.6s ease';
         observer.observe(el);
     });
 }
 
-// Error handling
-window.addEventListener('error', function(e) {
-    console.error('Error occurred:', e.error);
-    showNotification('Something went wrong. Please try again.', 'error');
-});
-
-// Add dynamic styles
-function addDynamicStyles() {
-    const style = document.createElement('style');
-    style.textContent = `
-        .entry-amounts {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .entry-amount-btn {
-            padding: 1rem;
-            border: 2px solid #00d2ff;
-            background: transparent;
-            color: #333;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .entry-amount-btn:hover,
-        .entry-amount-btn.selected {
-            background: #00d2ff;
-            color: white;
-        }
-        
-        .entry-amount-btn small {
-            display: block;
-            margin-top: 0.5rem;
-            opacity: 0.8;
-        }
-        
-        .match-type {
-            margin: 1rem 0;
-        }
-        
-        .match-type label {
-            display: block;
-            margin: 0.5rem 0;
-            cursor: pointer;
-        }
-        
-        .match-type input {
-            margin-right: 0.5rem;
-        }
-        
-        .match-type span {
-            font-size: 0.9rem;
-            color: #666;
-            margin-left: 0.5rem;
-        }
-        
-        .chat-message {
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 8px;
-        }
-        
-        .chat-message.me {
-            background: rgba(0, 210, 255, 0.2);
-            text-align: right;
-        }
-        
-        .chat-message.opponent {
-            background: rgba(255, 107, 107, 0.2);
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: white;
-        }
-        
-        .user-menu span {
-            font-size: 0.9rem;
-        }
-    `;
-    document.head.appendChild(style);
+function animatePrizePools() {
+    const prizePools = document.querySelectorAll('.prize-pool');
+    
+    setInterval(() => {
+        prizePools.forEach(pool => {
+            const currentText = pool.textContent;
+            const match = currentText.match(/₹([\d,]+)/);
+            if (match) {
+                const currentAmount = parseInt(match[1].replace(',', ''));
+                const newAmount = currentAmount + Math.floor(Math.random() * 100);
+                pool.textContent = currentText.replace(/₹[\d,]+/, `₹${newAmount.toLocaleString()}`);
+            }
+        });
+    }, 10000);
 }
 
-// Initialize dynamic styles
-addDynamicStyles();
+function autoSaveProgress() {
+    if (currentUser) {
+        const gameData = {
+            balance: currentBalance,
+            referralEarnings: referralEarnings,
+            totalReferrals: totalReferrals,
+            lastSave: new Date().toISOString()
+        };
+        localStorage.setItem('gameUserData', JSON.stringify(gameData));
+    }
+}
 
-console.log('🎮 GameZone Pro - Real Multiplayer Gaming Platform Loaded! 🎮');
-console.log('💰 Ready for real money gaming with live opponents! 💰');
+// Achievement System
+function checkAchievements(action) {
+    const achievements = JSON.parse(localStorage.getItem('gameAchievements') || '[]');
+    
+    switch(action) {
+        case 'win':
+            if (!achievements.includes('first_win')) {
+                achievements.push('first_win');
+                showNotification('🏆 Achievement Unlocked: First Victory!', 'success');
+                currentBalance += 25; // Achievement bonus
+                updateBalanceDisplay();
+                saveBalance();
+            }
+            break;
+        case 'play_10_games':
+            if (!achievements.includes('play_10')) {
+                achievements.push('play_10');
+                showNotification('🏆 Achievement Unlocked: 10 Games Played!', 'success');
+            }
+            break;
+    }
+    
+    localStorage.setItem('gameAchievements', JSON.stringify(achievements));
+}
+
+// Daily Bonus
+function checkDailyBonus() {
+    const lastBonus = localStorage.getItem('lastDailyBonus');
+    const today = new Date().toDateString();
+    
+    if (lastBonus !== today && currentUser) {
+        currentBalance += 20;
+        updateBalanceDisplay();
+        saveBalance();
+        localStorage.setItem('lastDailyBonus', today);
+        showNotification('🎁 Daily login bonus ₹20 added!', 'success');
+    }
+}
+
+// Sound Effects (placeholder)
+function playSound(soundType) {
+    // In a real implementation, you would play actual sound files
+    console.log(`Playing sound: ${soundType}`);
+}
+
+// Analytics (placeholder)
+function trackEvent(eventName, eventData) {
+    // In a real implementation, you would send this to your analytics service
+    console.log(`Analytics: ${eventName}`, eventData);
+}

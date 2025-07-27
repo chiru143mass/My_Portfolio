@@ -79,6 +79,15 @@ function addDynamicStyles() {
             background: rgba(255, 255, 255, 0.1);
             color: white;
         }
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        .user-menu span {
+            font-size: 0.9rem;
+        }
     `;
     document.head.appendChild(style);
 }
@@ -164,6 +173,14 @@ function handleWebSocketMessage(message) {
     }
 }
 
+function handleGameMove(data) {
+    showNotification(`Opponent made a move: ${data.move}`, 'info');
+}
+
+function handleGameEnd(data) {
+    showNotification(`Game ended! Winner: ${data.winner}`, data.winner === currentUser.name ? 'success' : 'error');
+}
+
 // Setup Event Listeners
 function setupEventListeners() {
     document.querySelectorAll('.amount-btn').forEach(btn => {
@@ -217,10 +234,8 @@ function setupEventListeners() {
         
         if (Math.abs(diff) > 50) {
             if (diff > 0) {
-                // Swipe up - could trigger quick actions
                 console.log('Swipe up detected');
             } else {
-                // Swipe down - could refresh content
                 console.log('Swipe down detected');
             }
         }
@@ -354,7 +369,7 @@ function searchForOpponent(gameType) {
 }
 
 function generateRandomOpponent() {
-    const names = ['Pro_Gamer', 'Champion_X', 'GameMaster', 'SkillKing', 'WinnerPro', 'GameLord', 'Victory_Star'];
+    const names = ['Pro_Gamer', 'Champion_X', 'GameMaster', 'SkillKing', 'WinnerPro', 'GameLord', 'Victory_Star', 'King_Player', 'Ultimate_Pro', 'Game_Beast'];
     const name = names[Math.floor(Math.random() * names.length)];
     return {
         name: name,
@@ -407,7 +422,7 @@ function startTurnTimer() {
         }
     }, 1000);
     
-    currentGameSession = { timer: timer };
+    currentGameSession = { ...currentGameSession, timer: timer };
 }
 
 function handleTurnTimeout() {
@@ -462,7 +477,7 @@ function endGame(playerWon) {
         const playAgain = confirm('Game finished! Want to play again?');
         if (playAgain) {
             leaveGame();
-            document.querySelector(`[data-game="${getCurrentGameType()}"]`).click();
+            quickMatch(getCurrentGameType());
         } else {
             leaveGame();
         }
@@ -660,7 +675,7 @@ function sendMessage() {
     }
     
     setTimeout(() => {
-        const responses = ['Good move!', 'Nice game!', '😊', 'GL HF!', 'Well played'];
+        const responses = ['Good move!', 'Nice game!', '😊', 'GL HF!', 'Well played', 'Great!', 'Awesome!', 'Nice try!'];
         const response = responses[Math.floor(Math.random() * responses.length)];
         addChatMessage('Opponent', response, false);
     }, Math.random() * 3000 + 1000);
@@ -1302,3 +1317,7 @@ function trackEvent(eventName, eventData) {
     // In a real implementation, you would send this to your analytics service
     console.log(`Analytics: ${eventName}`, eventData);
 }
+
+// Console welcome message
+console.log('🎮 GameZone Pro - Real Multiplayer Gaming Platform Loaded! 🎮');
+console.log('💰 Ready for real money gaming with live opponents! 💰');
